@@ -54,7 +54,7 @@ fun DefaultPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PhotographerCardPreview(){
     CodelabcomposelayoutTheme {
