@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,9 +40,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun LayoutsCodelab(){
-    Scaffold{ innerPadding ->
-        Text(text = "Hi there", modifier = Modifier.padding(innerPadding))
+fun LayoutsCodelab() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Layouts Codelab")
+                },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomNavigation(
+
+            ){}
+        }
+    ) { innerPadding ->
+        BodyContent(
+            Modifier
+                .padding(innerPadding)
+                .padding(8.dp))
+    }
+}
+
+@Composable
+fun BodyContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(text = "Hi there")
+        Text(text = "thanks for going through the Layouts codelab")
     }
 }
 
@@ -51,7 +83,8 @@ fun PhotographCard(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(4.dp))
             .background(MaterialTheme.colors.surface)
             .clickable(onClick = { /* Ignoring click */ })
-            .padding(16.dp)) {
+            .padding(16.dp)
+    ) {
         Surface(
             modifier = Modifier.size(50.dp),
             shape = CircleShape,
@@ -83,10 +116,13 @@ fun LayoutsCodelabPreview() {
     }
 }
 
+/**
+ * Preview for the PhotographyCard
 @Preview(showBackground = true)
 @Composable
 fun PhotographerCardPreview() {
-    CodelabcomposelayoutTheme {
-        PhotographCard()
-    }
+CodelabcomposelayoutTheme {
+PhotographCard()
 }
+}
+ */
