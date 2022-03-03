@@ -61,4 +61,7 @@ dependencies {
 
     //All Material design icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    // Coil is used to simplify the use of images on lists or whatever component you want.
+    implementation 'io.coil-kt:coil-compose:1.4.0'
 }
