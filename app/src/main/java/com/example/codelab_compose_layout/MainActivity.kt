@@ -20,8 +20,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.AlignmentLine
+import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.codelab_compose_layout.ui.theme.CodelabcomposelayoutTheme
@@ -74,9 +79,16 @@ fun LayoutsCodelab() {
 
 @Composable
 fun BodyContent(modifier: Modifier = Modifier) {
+    /*
     Column(modifier = modifier) {
         Text(text = "Hi there")
         Text(text = "thanks for going through the Layouts codelab")
+    }*/
+    MyOwnColumn(modifier.padding(8.dp)) {
+        Text("MyOwnColumn")
+        Text("places items")
+        Text("vertically.")
+        Text("We've done it by hand!")
     }
 }
 
@@ -94,6 +106,29 @@ fun ImageListItem(index: Int) {
         Text("Item #$index", style = MaterialTheme.typography.subtitle1)
     }
 }
+
+/**
+ * Create your own custom layout
+ */
+fun Modifier.firstBaselineToTop(
+    firstBaselineToTop: Dp
+) = this.then(
+    layout {measurable, constraints ->
+        val pleaceble = measurable.measure(constraints)
+
+        // Check if composable has a first baseline
+        check(pleaceble[FirstBaseline] != AlignmentLine.Unspecified)
+        val firstBaseline = pleaceble[FirstBaseline]
+
+        //Height of the composable with padding - first baseline
+        val pleacebleY = firstBaselineToTop.roundToPx() - firstBaseline
+        val height = pleaceble.height + pleacebleY
+        layout(pleaceble.width, height){
+            // Where the composable gets placed
+            pleaceble.placeRelative(0, pleacebleY)
+        }
+    }
+)
 
 /**
  * Simple example how a simple LazyList works.
@@ -157,6 +192,43 @@ fun PhotographCard(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Using the layout composable
+ */
+@Composable
+fun MyOwnColumn(
+    modifier: Modifier = Modifier,
+    // Custom layout attributes
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        // measure and position children given constraints logic here
+        // Don't constrain a cuild view further, measure then with the given constraint
+        // List of measured children
+        val pleacebles = measurables.map { measurable ->
+            // Measure each child
+            measurable.measure(constraints)
+        }
+
+        // Track the y co-ord we have placed children up to
+        var yPosition = 0
+
+        //Set the size of the layout as big as it can
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            // Place children in the parent layout
+            pleacebles.forEach { pleaceble ->
+                //Position item on the screen
+                pleaceble.placeRelative(x = 0, y = yPosition)
+
+                // Record the y co-ord placed up to
+                yPosition += pleaceble.height
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -173,6 +245,23 @@ fun LayoutsCodelabPreviewList() {
         ImageList()
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun TextWithPaddingToBaselinePreview() {
+    CodelabcomposelayoutTheme {
+        Text("Hi there!", Modifier.firstBaselineToTop(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextWithNormalPaddingPreview() {
+    CodelabcomposelayoutTheme {
+        Text("Hi there!", Modifier.padding(top = 32.dp))
+    }
+}
+
 
 /**
  * Preview for the PhotographyCard
