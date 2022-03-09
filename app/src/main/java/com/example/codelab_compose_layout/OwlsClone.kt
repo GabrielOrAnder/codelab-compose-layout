@@ -152,3 +152,48 @@ fun PreviewSimpleText(){
         OCBodyContent()
     }
 }
+
+/**
+ * Testing the order of applied modifiers
+ */
+@Preview(showBackground = true)
+@Composable
+fun PreviewWithModifiers(){
+    CodelabcomposelayoutTheme {
+        Row(
+            modifier = Modifier
+                .background(color = Color.LightGray)
+                .size(200.dp)
+                .padding(16.dp)
+                .horizontalScroll(rememberScrollState())
+        ) {
+            StaggeredGrid {
+                for (topic in topics) {
+                    Chip(modifier = Modifier.padding(8.dp), text = topic)
+                }
+            }
+        }
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewWithModifiers2(){
+    CodelabcomposelayoutTheme {
+        Row(
+            modifier = Modifier
+                .background(color = Color.LightGray)
+                .padding(16.dp)
+                .size(200.dp)
+                .horizontalScroll(rememberScrollState())
+        ) {
+            StaggeredGrid {
+                for (topic in topics) {
+                    Chip(modifier = Modifier.padding(8.dp), text = topic)
+                }
+            }
+        }
+
+    }
+}
